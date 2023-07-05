@@ -22,7 +22,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           folder-id: b1gcvl619mdunf1cqqbv
-          image-id: fd8ref8pd2uefi7o6kh3
+          image-id: fd85p4aqjlpuf14r7044
           zone-id: 'ru-central1-b'
           subnet-id: e2lno1rkqo63l729dlo7
           cores: 16
@@ -48,6 +48,8 @@ jobs:
     outputs:
       release_type: ${{ steps.tag.outputs.RELEASE_TYPE }}
       package_name: ${{ steps.tag.outputs.PACKAGE_NAME }}
+      pydoc_dir: ${{ steps.build.outputs.PYDOC_DIR }}
+
     steps:
       - name: Parse tag
         id: tag
@@ -77,6 +79,7 @@ jobs:
           ninja yson_lib driver_lib driver_rpc_lib
 
       - name: Build package
+        id: build
         shell: bash
         run: |
           echo "RELEASE_VERSION: ${{ steps.tag.outputs.RELEASE_VERSION }}"
@@ -91,6 +94,7 @@ jobs:
           cd "${ytsaurus_python}"
           PYTHONPATH="${ytsaurus_python}" sphinx-apidoc -F -o "$DOCS_ROOT" yt yt/packages yt/test_helpers yt/testlib yt/tool yt/environment yt/local yt/entry
           PYTHONPATH="${ytsaurus_python}" sphinx-build -b html "$DOCS_ROOT" "$DOCS_ROOT/_html"
+          echo "PYDOC_DIR=$DOCS_ROOT/_html" >> $GITHUB_OUTPUT
 
   test_release:
     name: Run release TestPyPi
@@ -106,7 +110,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           bucket: ${{ secrets.TEST_PYDOC_S3_BUCKET }}
-          root: $(realpath "../build/pydoc")/_html
+          root: ${{ needs.build.outputs.pydoc_dir }}
 
   prod_release:
     name: Run release PyPi
