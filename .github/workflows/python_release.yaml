@@ -122,7 +122,7 @@ jobs:
         with:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           bucket: ${{ secrets.TEST_PYDOC_S3_BUCKET }}
-          root: ${{ needs.build.outputs.pydoc_dir }}
+          root: ../build/pydoc/_html
 
   prod_release:
     name: Run release PyPi
