@@ -126,6 +126,7 @@ jobs:
           root: ../build/pydoc/_html
           include: |
             **/*
+            **
             *
 
   prod_release:
