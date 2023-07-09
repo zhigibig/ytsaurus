@@ -25,7 +25,7 @@ jobs:
           image-id: fd85p4aqjlpuf14r7044
           zone-id: 'ru-central1-b'
           subnet-id: e2lno1rkqo63l729dlo7
-          cores: 16
+          cores: 32
           memory: 32GB
           core-fraction: 100
           disk-type: network-ssd-nonreplicated
