@@ -113,7 +113,8 @@ jobs:
           if [[ $GITHUB_REF =~ main$ ]];
           then
             IMAGE_TAG=dev
-          elif [[ $GITHUB_REF =~ test/debug-info$ ]]
+          elif [[ $GITHUB_REF =~ test/debug-info$ ]];
+          then
             IMAGE_TAG=test-debug-info
           else
             IMAGE_TAG=dev-${GITHUB_REF#refs/*/stable/}
