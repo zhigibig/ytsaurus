@@ -125,6 +125,8 @@ jobs:
             docker tag ytsaurus/ytsaurus-nightly:${IMAGE_TAG}-${GITHUB_SHA} ytsaurus/ytsaurus-nightly:latest
             docker push ytsaurus/ytsaurus-nightly:latest
           fi
+          bash ./yt/docker/local/build.sh --ytserver-all ../build/yt/yt/server/all/ytserver-all --ytserver-all-credits ./yt/docker/ytsaurus/credits/ytserver-all.CREDITS --yt-local ./yt/python/yt/local/bin/yt_local --image-tag ${IMAGE_TAG}
+          docker push ytsaurus/local:${IMAGE_TAG}
 
       - name: Docker registry login
         shell: bash
