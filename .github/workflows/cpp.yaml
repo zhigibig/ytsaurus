@@ -3,8 +3,7 @@ name: C++ CI
 on:
   push:
     branches:
-      - main
-      - stable/[0-9]+\.[0-9]+
+      - build-vm-image
 
 jobs:
   start-vm:
@@ -22,7 +21,7 @@ jobs:
           yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           folder-id: b1gcvl619mdunf1cqqbv
-          image-id: fd85p4aqjlpuf14r7044
+          image-id: fd8ivths56id3dno13jc
           zone-id: 'ru-central1-b'
           subnet-id: e2lno1rkqo63l729dlo7
           cores: 16
@@ -117,29 +116,13 @@ jobs:
             IMAGE_TAG=dev-${GITHUB_REF#refs/*/stable/}
           fi
           bash ./yt/docker/ytsaurus/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --ytsaurus-spyt-release-path ../build/spyt_release --ytsaurus-yql-package-path ../build/yql_package --output-path ../docker-ytsaurus-build --image-tag ${IMAGE_TAG}
-          docker push ytsaurus/ytsaurus:${IMAGE_TAG}
           docker tag ytsaurus/ytsaurus:${IMAGE_TAG} ytsaurus/ytsaurus-nightly:${IMAGE_TAG}-${GITHUB_SHA}
-          docker push ytsaurus/ytsaurus-nightly:${IMAGE_TAG}-${GITHUB_SHA}
-          if [[ $IMAGE_TAG == 'dev' ]];
-          then
-            docker tag ytsaurus/ytsaurus-nightly:${IMAGE_TAG}-${GITHUB_SHA} ytsaurus/ytsaurus-nightly:latest
-            docker push ytsaurus/ytsaurus-nightly:latest
-          fi
 
       - name: Docker registry login
         shell: bash
         run: |
           echo '${{ secrets.YC_SA_JSON_CREDENTIALS }}' > sa.json
           cat sa.json | docker login --username json_key --password-stdin  cr.yandex
-
-      - name: Docker yt_nightly
-        shell: bash
-        run: |
-          if [[ $GITHUB_REF =~ main$ ]];
-          then
-            docker tag ytsaurus/ytsaurus:dev cr.yandex/crpl84hkh3k16ihscv0j/ytsaurus-nightly:${GITHUB_SHA}
-            docker push cr.yandex/crpl84hkh3k16ihscv0j/ytsaurus-nightly:${GITHUB_SHA}
-          fi
 
       - name: Kube
         shell: bash
@@ -174,24 +157,6 @@ jobs:
         run: |
           export TESTMO_TOKEN="${{ secrets.NEBIUS_TESTMO_TOKEN }}"
           testmo automation:run:submit --instance https://nebius.testmo.net --project-id 4 --name "Run ${{ github.run_id }}" --source "unittests" --results "../build/junit-*.xml"
-
-
-  stop-vm:
-    name: Stop VM
-    needs:
-      - start-vm
-      - check
-    runs-on: trampoline
-    if: ${{ always() }}
-    steps:
-      - name: Stop YC runner
-        uses: yc-actions/yc-github-runner@v1
-        with:
-          mode: stop
-          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-          github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          label: ${{ needs.start-vm.outputs.label }}
-          instance-id: ${{ needs.start-vm.outputs.instance-id }}
 
   send-notifications:
     name: Send notifications
