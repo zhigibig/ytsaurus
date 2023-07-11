@@ -109,6 +109,12 @@ jobs:
         run: |
           tar -xf spyt-1.69.tar -C ../build
           tar -xf yql-package.tar -C ../build
+          strip ../build/yt/chyt/server/bin/ytserver-clickhouse
+          strip ../build/yt/yt/server/log_tailer/bin/ytserver-log-tailer
+          strip ../build/yt/chyt/controller/cmd/chyt-controller/chyt-controller
+          strip ../build/yt/systest/tester/systest
+          strip ../build/yql_package/ytserver-yql-agent
+          strip ../build/yql_package/mrjob
           mkdir -p ../docker-ytsaurus-build
           if [[ $GITHUB_REF =~ main$ ]];
           then
