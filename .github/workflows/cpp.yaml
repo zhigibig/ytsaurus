@@ -66,6 +66,17 @@ jobs:
           rm -rf *
           cmake \
             -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE=../ytsaurus/clang.toolchain \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+            ../ytsaurus
+
+          mkdir -p ../build_debug
+          cd ../build_debug
+          rm -rf *
+          cmake \
+            -G Ninja \
             -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_TOOLCHAIN_FILE=../ytsaurus/clang.toolchain \
             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
@@ -80,6 +91,14 @@ jobs:
           export CCACHE_REMOTE_ONLY=true
           export CCACHE_REMOTE_STORAGE="http://10.129.0.22|layout=bazel"
           ninja
+
+          cd ../build_debug
+          export CCACHE_BASEDIR="$(realpath ..)"
+          export CCACHE_REMOTE_ONLY=true
+          export CCACHE_REMOTE_STORAGE="http://10.129.0.22|layout=bazel"
+          ninja ytserver-all
+
+          mv yt/yt/server/all/ytserver-all ../build/yt/yt/server/all/ytserver-all
 
       - name: Build Python packages
         shell: bash
