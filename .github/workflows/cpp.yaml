@@ -31,6 +31,21 @@ jobs:
           disk-type: network-ssd-nonreplicated
           disk-size: 279GB
 
+  init:
+    name: init git
+    needs: start-vm
+    runs-on: ${{ needs.start-vm.outputs.label }}
+    steps:
+      - name: Init
+        shell: bash
+        run: |
+          git --version
+          sudo apt remove git
+          sudo add-apt-repository -y ppa:git-core/ppa
+          sudo apt-get update
+          sudo apt-get install git -y
+          git --version
+
   checkout:
     name: Checkout sources
     needs: start-vm
