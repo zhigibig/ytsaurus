@@ -49,6 +49,7 @@ jobs:
       - name: Check
         shell: bash
         run: |
+          cd ../ytsaurus
           git --version
           git status
 
