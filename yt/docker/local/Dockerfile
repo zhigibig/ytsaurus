@@ -21,7 +21,12 @@ EXPOSE 80
 
 RUN apt-get update && apt-get install -y \
     python \
-    pip
+    pip \
+    openjdk-11-jdk
+
+RUN ln -s /usr/lib/jvm/java-11-openjdk-amd64 /opt/jdk11
+ENV JAVA_HOME /opt/jdk11
+RUN export JAVA_HOME
 
 RUN pip install -i https://pypi.org/simple/ \
     ytsaurus-local \
