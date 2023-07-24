@@ -39,6 +39,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout ydb
+        uses: actions/checkout@v3
+        repository: 
+        ref: 
+
   check:
     name: Run checks
     needs:
