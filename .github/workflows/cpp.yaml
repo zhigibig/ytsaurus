@@ -41,8 +41,8 @@ jobs:
 
       - name: Checkout ydb
         uses: actions/checkout@v3
-        repository: 
-        ref: 
+        repository: zlobober/ydb
+        ref: zlobober/test2
 
   check:
     name: Run checks
@@ -88,6 +88,20 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             ../ytsaurus
 
+          mkdir -p ../build_yql
+          cd ../build_yql
+          rm -rf *
+          cmake \
+            -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER_LAUNCHER=/usr/local/bin/ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/local/bin/ccache \
+            -DCMAKE_TOOLCHAIN_FILE=../ydb/clang.toolchain \
+            -DCMAKE_C_FLAGS_RELEASE="-O2 -UNDEBUG" \
+            -DCMAKE_CXX_FLAGS_RELEASE="-O2 -UNDEBUG" \
+            -DCMAKE_POSITION_INDEPENDENT_CODE=On \
+            ../ydb
+
       - name: Build
         shell: bash
         run: |
@@ -99,6 +113,9 @@ jobs:
 
           cd ../build_debug
           ninja ytserver-all
+
+          cd ../build_yql
+          ninja libyqlplugin.so
 
       - name: Build Python packages
         shell: bash
