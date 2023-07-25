@@ -125,14 +125,23 @@ jobs:
           bucket: ${{ secrets.TEST_PYDOC_S3_BUCKET }}
           root: ../build/pydoc/_html
           include: |
-            **
             *
-            */*
-            */*/*
-            */*/*/*
-            **/*
-            **/*/*
-            **/*/*/*
+            .doctrees/*
+            _modules/*
+            _modules/yt/*
+            _modules/yt/cli/*
+            _modules/yt/clickhouse/*
+            _modules/yt/operations_archieve/*
+            _modules/yt/test_helpers/*
+            _modules/yt/tools/*
+            _modules/yt/type_info/*
+            _modules/yt/wire_format/*
+            _modules/yt/wrapper/*
+            _modules/yt/wrapper/schema/*
+            _modules/yt/ypath/*
+            _modules/yt/yson/*
+            _sources/*
+            _static/*
 
   prod_release:
     name: Run release PyPi
