@@ -47,6 +47,9 @@ jobs:
     runs-on: ${{ needs.start-vm.outputs.label }}
     outputs:
       release_type: ${{ steps.tag.outputs.RELEASE_TYPE }}
+      package_name: ${{ steps.tag.outputs.PACKAGE_NAME }}
+      pydoc_dir: ${{ steps.build.outputs.PYDOC_DIR }}
+
     steps:
       - name: Parse tag
         id: tag
@@ -85,6 +88,7 @@ jobs:
           ninja yson_lib driver_lib driver_rpc_lib
 
       - name: Build package
+        id: build
         shell: bash
         run: |
           echo "RELEASE_VERSION: ${{ steps.tag.outputs.RELEASE_VERSION }}"
@@ -92,9 +96,21 @@ jobs:
           echo "RELEASE_TYPE: ${{ steps.tag.outputs.RELEASE_TYPE }}"
           python3.11 -m venv ../venv
           source ../venv/bin/activate
+          pip3 install six simplejson decorator typing_extensions tqdm
           YTSAURUS_PACKAGE_VERSION=${{ steps.tag.outputs.RELEASE_VERSION }} bash ./yt/python/packages/build_ytsaurus_packages.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --ytsaurus-package-name ${{ steps.tag.outputs.PACKAGE_NAME }}
+          echo "PACKAGE IS BUILT"
           ytsaurus_python=$(realpath "../build/ytsaurus_python")
           mv "${ytsaurus_python}/$(echo ${{ steps.tag.outputs.PACKAGE_NAME }} | sed -E "s/-/_/g")_dist" dist
+          python3 -m pip install sphinx
+          export DOCS_ROOT=$(realpath "../build/pydoc")
+          mkdir "$DOCS_ROOT"
+          cd "${ytsaurus_python}"
+          PYTHONPATH="${ytsaurus_python}" sphinx-apidoc -F -o "$DOCS_ROOT" yt yt/packages yt/test_helpers yt/testlib yt/tool yt/environment yt/local yt/entry
+          PYTHONPATH="${ytsaurus_python}" sphinx-build -b html "$DOCS_ROOT" "$DOCS_ROOT/_html"
+          echo "PYDOC_DIR=$DOCS_ROOT/_html" >> $GITHUB_OUTPUT
+          ls -la $DOCS_ROOT/_html
+          ls -la $DOCS_ROOT/_html/_modules
+          ls -la $DOCS_ROOT/_html/_modules/yt
 
   test_release:
     name: Run release TestPyPi
@@ -102,14 +118,34 @@ jobs:
       - build
       - checkout
       - start-vm
-    if: ${{ needs.build.outputs.release_type == 'test' }}
+    if: ${{ needs.build.outputs.release_type == 'test' && needs.build.outputs.package_name == 'ytsaurus-client' }}
     runs-on: ${{ needs.start-vm.outputs.label }}
     steps:
-      - name: Publish package distributions to TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish test pydoc
+        uses: yc-actions/yc-obj-storage-upload@v1
         with:
-            repository-url: https://test.pypi.org/legacy/
-            password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+          bucket: ${{ secrets.TEST_PYDOC_S3_BUCKET }}
+          root: ../build/pydoc/_html
+          include: |
+            _sources/*
+            _static/*
+            .doctrees/*
+            _modules/yt/cli/*
+            _modules/yt/clickhouse/*
+            _modules/yt/operations_archieve/*
+            _modules/yt/test_helpers/*
+            _modules/yt/tools/*
+            _modules/yt/type_info/*
+            _modules/yt/wire_format/*
+            _modules/yt/wrapper/*
+            _modules/yt/wrapper/schema/*
+            _modules/yt/ypath/*
+            _modules/yt/yson/*
+            _modules/yt/*
+            _modules/*
+            *
+
 
   prod_release:
     name: Run release PyPi
@@ -144,24 +180,4 @@ jobs:
           label: ${{ needs.start-vm.outputs.label }}
           instance-id: ${{ needs.start-vm.outputs.instance-id }}
 
-  send-notifications:
-    name: Send notifications
-    needs:
-      - stop-vm
-    runs-on: trampoline
-    if: ${{ failure() }}
-    steps:
-      - name: Send telegram message
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          disable_web_page_preview: true
-          format: markdown
-          message: |
-            Workflow *${{github.workflow}}* failed: ${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}.
-            Git ${{github.ref_type}}: *${{github.ref_name}}*.
-            Commit:
-            ```
-            ${{github.event.head_commit.message}}
-            ```
+
