@@ -14,6 +14,9 @@ COPY ./start.sh /usr/bin/start.sh
 VOLUME /var/lib/yt/local-cypress
 EXPOSE 80
 
+RUN apt-get update && apt-get install -y software-properties-common
+RUN add-apt-repository ppa:deadsnakes/ppa
+
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y \
     python3.7 \
     python3-pip \
