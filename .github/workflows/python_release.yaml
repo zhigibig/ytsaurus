@@ -96,7 +96,7 @@ jobs:
           echo "RELEASE_TYPE: ${{ steps.tag.outputs.RELEASE_TYPE }}"
           python3.11 -m venv ../venv
           source ../venv/bin/activate
-          pip3 install -r ./ytsaurus/yt/yt/scripts/pytest_requirements.txt
+          pip3 install -r ./yt/yt/scripts/pytest_requirements.txt
           YTSAURUS_PACKAGE_VERSION=${{ steps.tag.outputs.RELEASE_VERSION }} bash ./yt/python/packages/build_ytsaurus_packages.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --ytsaurus-package-name ${{ steps.tag.outputs.PACKAGE_NAME }}
           echo "PACKAGE IS BUILT"
           ytsaurus_python=$(realpath "../build/ytsaurus_python")
