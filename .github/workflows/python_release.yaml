@@ -133,7 +133,7 @@ jobs:
             .doctrees/*
             _modules/yt/cli/*
             _modules/yt/clickhouse/*
-            _modules/yt/operations_archieve/*
+            _modules/yt/operations_archive/*
             _modules/yt/test_helpers/*
             _modules/yt/tools/*
             _modules/yt/type_info/*
