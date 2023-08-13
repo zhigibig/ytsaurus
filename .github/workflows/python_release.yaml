@@ -105,7 +105,7 @@ jobs:
           export DOCS_ROOT=$(realpath "../build/pydoc")
           mkdir "$DOCS_ROOT"
           cd "${ytsaurus_python}"
-          PYTHONPATH="${ytsaurus_python}" sphinx-apidoc -F -o "$DOCS_ROOT" yt yt/packages yt/test_helpers yt/testlib yt/tool yt/environment yt/local yt/entry
+          PYTHONPATH="${ytsaurus_python}" sphinx-apidoc -F -o "$DOCS_ROOT" yt yt/packages yt/test_helpers yt/testlib yt/tool yt/environment yt/local yt/entry yt/operations_archive '*tests*'
           PYTHONPATH="${ytsaurus_python}" sphinx-build -b html "$DOCS_ROOT" "$DOCS_ROOT/_html"
           echo "PYDOC_DIR=$DOCS_ROOT/_html" >> $GITHUB_OUTPUT
           ls -la $DOCS_ROOT/_html
