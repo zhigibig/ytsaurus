@@ -41,8 +41,9 @@ jobs:
 
       - name: Checkout ydb
         uses: actions/checkout@v3
-        repository: ydb-platform/ydb
-        ref: 2c1c42926da1c9de23cac9f100df8b3706dd6377
+        with:
+          repository: ydb-platform/ydb
+          ref: 2c1c42926da1c9de23cac9f100df8b3706dd6377
 
   check:
     name: Run checks
