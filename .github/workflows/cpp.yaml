@@ -41,8 +41,8 @@ jobs:
 
       - name: Checkout ydb
         uses: actions/checkout@v3
-        repository: zlobober/ydb
-        ref: zlobober/test2
+        repository: ydb-platform/ydb
+        ref: 2c1c42926da1c9de23cac9f100df8b3706dd6377
 
   check:
     name: Run checks
@@ -88,8 +88,8 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             ../ytsaurus
 
-          mkdir -p ../build_yql
-          cd ../build_yql
+          mkdir -p ../build_qt
+          cd ../build_qt
           rm -rf *
           cmake \
             -G Ninja \
@@ -114,8 +114,30 @@ jobs:
           cd ../build_debug
           ninja ytserver-all
 
-          cd ../build_yql
+          cd ../build_qt
           ninja libyqlplugin.so
+          ninja libdatetime2_udf.so
+          ninja libhyperloglog_udf.so
+          ninja libjson_udf.so
+          ninja libset_udf.so
+          ninja libtop_udf.so
+          ninja libyson2_udf.so
+          ninja libdigest_udf.so
+          ninja libhyperscan_udf.so
+          ninja libmath_udf.so
+          ninja libstat_udf.so
+          ninja libtopfreq_udf.so
+          ninja libdsv_udf.so
+          ninja libip_udf.so
+          ninja libpire_udf.so
+          ninja libstreaming_udf.so
+          ninja libunicode_udf.so
+          ninja libhistogram_udf.so
+          ninja libjson2_udf.so
+          ninja libre2_udf.so
+          ninja libstring_udf.so
+          ninja liburl_udf.so
+          ninja mrjob
 
       - name: Build Python packages
         shell: bash
@@ -155,6 +177,9 @@ jobs:
           elif [[ $GITHUB_REF =~ releases ]];
           then
             IMAGE_TAG=dev-${GITHUB_REF#refs/*/stable/}
+          elif [[ $GITHUB_REF =~ test/yql ]];
+          then
+            IMAGE_TAG=nadya73-test-yql
           else
             IMAGE_TAG=nopush
           fi
@@ -162,10 +187,10 @@ jobs:
 
           bash ./yt/docker/ytsaurus/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --ytsaurus-spyt-release-path ../build/spyt_release --ytsaurus-yql-package-path ../build/yql_package --output-path ../docker-ytsaurus-build --image-tag ${IMAGE_TAG}
 
-          bash ./yt/docker/query-tracker/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --yql-build-path ../build_yql --output-path ../docker-query-tracker-build --image-tag ${IMAGE_TAG}
+          bash ./yt/docker/query-tracker/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --qt-build-path ../build_qt --output-path ../docker-query-tracker-build --image-tag ${IMAGE_TAG}
 
           mv ../build_debug/yt/yt/server/all/ytserver-all ../build/yt/yt/server/all/ytserver-all
-          bash ./yt/docker/ytsaurus/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --ytsaurus-spyt-release-path ../build/spyt_release --ytsaurus-yql-package-path ../build/yql_package --output-path ../docker-ytsaurus-build --image-tag ${IMAGE_TAG_DEBUG}
+          bash ./yt/docker/ytsaurus/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --ytsaurus-spyt-release-path ../build/spyt_release --output-path ../docker-ytsaurus-build --image-tag ${IMAGE_TAG_DEBUG}
 
           if [[ $IMAGE_TAG != "nopush" ]];
           then

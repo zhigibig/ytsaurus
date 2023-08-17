@@ -5,7 +5,7 @@ script_name=$0
 image_tag=""
 ytsaurus_source_path="."
 ytsaurus_build_path="."
-ytsaurus_spyt_release_path="./spyt_release"
+qt_build_path="."
 output_path="."
 
 print_usage() {
@@ -13,7 +13,7 @@ print_usage() {
 Usage: $script_name [-h|--help]
                     [--ytsaurus-source-path /path/to/ytsaurus.repo (default: $ytsaurus_source_path)]
                     [--ytsaurus-build-path /path/to/ytsaurus.build (default: $ytsaurus_build_path)]
-                    [--ytsaurus-spyt-release-path /path/to/ytsaurus-spyt-release (default: $ytsaurus_spyt_release_path)]
+                    [--qt-build-path /path/to/qt.build (default: $qt_build_path)]
                     [--output-path /path/to/output (default: $output_path)]
                     [--image-tag some-tag (default: $image_tag)]
 EOF
@@ -32,12 +32,12 @@ while [[ $# -gt 0 ]]; do
         ytsaurus_build_path="$2"
         shift 2
         ;;
-        --output-path)
-        output_path="$2"
+        --qt-build-path)
+        ytsaurus_build_path="$2"
         shift 2
         ;;
-        --ytsaurus-spyt-release-path)
-        ytsaurus_spyt_release_path="$2"
+        --output-path)
+        output_path="$2"
         shift 2
         ;;
         --image-tag)
@@ -57,27 +57,27 @@ done
 
 
 ytserver_all="${ytsaurus_build_path}/yt/yt/server/all/ytserver-all"
-ytserver_clickhouse="${ytsaurus_build_path}/yt/chyt/server/bin/ytserver-clickhouse"
-ytserver_log_tailer="${ytsaurus_build_path}/yt/yt/server/log_tailer/bin/ytserver-log-tailer"
-chyt_controller="${ytsaurus_source_path}/yt/chyt/controller/cmd/chyt-controller/chyt-controller"
-init_operation_archive="${ytsaurus_source_path}/yt/python/yt/environment/init_operation_archive.py"
-clickhouse_trampoline="${ytsaurus_source_path}/yt/chyt/trampoline/clickhouse-trampoline.py"
-credits="${ytsaurus_source_path}/yt/docker/ytsaurus/credits"
-dockerfile="${ytsaurus_source_path}/yt/docker/ytsaurus/Dockerfile"
+ytserver_yql_agent="${ytsaurus_build_path}/yt/yql/agent/bin/ytserver-yql-agent"
+mrjob="${qt_build_path}/ydb/library/yql/tools/mrjob/mrjob"
+# TODO(nadya73): add .so
+
+ytsaurus_credits="${ytsaurus_source_path}/yt/docker/ytsaurus/credits"
+qt_credits="${ytsaurus_source_path}/yt/docker/query-tracker/credits"
+
+dockerfile="${ytsaurus_source_path}/yt/docker/query-tracker/Dockerfile"
 
 cp ${ytserver_all} ${output_path}
-cp ${ytserver_clickhouse} ${output_path}
-cp ${ytserver_log_tailer} ${output_path}
-cp ${chyt_controller} ${output_path}
-cp ${init_operation_archive} ${output_path}
-cp ${clickhouse_trampoline} ${output_path}
+cp ${ytserver_yql_agent} ${output_path}
+cp ${mrjob} ${output_path}
+# TODO(nadya73): cp .so
 
 cp -r ${ytsaurus_build_path}/ytsaurus_python ${output_path}
-
 cp ${dockerfile} ${output_path}
-cp -r ${ytsaurus_spyt_release_path} ${output_path}
-cp -r ${credits} ${output_path}
+
+mkdir ${output_path}/credits
+cp -r ${ytsaurus_credits}/ytserver-all.CREDITS ${output_path}/credits
+cp -r ${qt_credits}/* ${output_path}/credits
 
 cd ${output_path}
 
-docker build -t ytsaurus/ytsaurus:${image_tag} .
+docker build -t ytsaurus/query-tracker:${image_tag} .
