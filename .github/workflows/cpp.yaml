@@ -60,6 +60,12 @@ jobs:
       - name: Build Go
         shell: bash
         run: |
+          ls -la ../
+          ls -la ../ytsaurus
+          ls -la ../ytsaurus/yt
+          ls -la ../ytsaurus/yt/chyt
+          ls -la ../ytsaurus/yt/chyt/controller
+          ls -la ../ytsaurus/yt/chyt/controller/cmd
           cd ../ytsaurus/yt/chyt/controller/cmd/chyt-controller
           export HOME=${RUNNER_WORKSPACE}
           /opt/go/bin/go build
