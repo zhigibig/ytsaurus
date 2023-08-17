@@ -3,7 +3,7 @@ name: C++ CI
 on:
   push:
     branches:
-      - main
+      - test/yql
       - stable/[0-9]+\.[0-9]+
 
 jobs:
