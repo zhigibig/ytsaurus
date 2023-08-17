@@ -92,7 +92,7 @@ jobs:
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             ../ytsaurus/ytsaurus
 
-          sudo apt-get -y install libaio1 libaio-dev
+          sudo apt-get -y install antlr3 libaio1 libaio-dev
 
           mkdir -p ../build_qt
           cd ../build_qt
