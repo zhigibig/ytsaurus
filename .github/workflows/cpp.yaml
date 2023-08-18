@@ -175,7 +175,6 @@ jobs:
           mkdir -p ../docker-query-tracker-build
 
           tar -xf spyt-1.69.tar -C ../build
-          tar -xf yql-package.tar -C ../build
 
           if [[ $GITHUB_REF =~ main$ ]];
           then
