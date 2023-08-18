@@ -88,11 +88,3 @@ RUN sed -i 's/python3/python3.8/' /usr/bin/lsb_release
 
 RUN ln -s /usr/local/bin/yt /usr/bin/yt -f
 
-# TODO: add opportunity to get this files in opensource
-# Static binaries & shared libraries built in arcadia.
-# In order to obtain them, run the following command in yt/yql/package:
-#   ya package package.json --raw-package-path yql_package
-# And move the resulting directory to the context of docker build.
-COPY ./yql_package/ytserver-yql-agent /usr/bin/
-COPY ./yql_package/mrjob /usr/bin/
-COPY ./yql_package/lib*.so /usr/lib/yql/
