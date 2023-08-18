@@ -3,7 +3,7 @@ name: C++ CI
 on:
   push:
     branches:
-      - test/yql
+      - test/yql2
       - stable/[0-9]+\.[0-9]+
 
 jobs:
@@ -183,7 +183,7 @@ jobs:
           elif [[ $GITHUB_REF =~ releases ]];
           then
             IMAGE_TAG=dev-${GITHUB_REF#refs/*/stable/}
-          elif [[ $GITHUB_REF =~ test/yql ]];
+          elif [[ $GITHUB_REF =~ test/yql2 ]];
           then
             IMAGE_TAG=nadya73-test-yql
           else
