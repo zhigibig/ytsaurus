@@ -33,7 +33,7 @@ while [[ $# -gt 0 ]]; do
         shift 2
         ;;
         --qt-build-path)
-        ytsaurus_build_path="$2"
+        qt_build_path="$2"
         shift 2
         ;;
         --output-path)

@@ -4,9 +4,6 @@ USER root
 
 WORKDIR /tmp
 
-ARG SPYT_VERSION=1.69.3
-ARG SPARK_VERSION=1.69.0
-
 # Main binary.
 COPY ./ytserver-all /usr/bin/ytserver-all
 COPY ./ytserver-yql-agent /usr/bin/ytserver-yql-agent
