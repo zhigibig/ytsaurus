@@ -8,6 +8,7 @@ WORKDIR /tmp
 COPY ./ytserver-all /usr/bin/ytserver-all
 COPY ./ytserver-yql-agent /usr/bin/ytserver-yql-agent
 COPY ./mrjob /usr/bin/mrjob
+COPY ./yql /usr/bin/yql
 
 RUN ln -s /usr/bin/ytserver-all /usr/bin/ytserver-query-tracker
 

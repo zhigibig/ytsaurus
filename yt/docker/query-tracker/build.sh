@@ -66,9 +66,14 @@ qt_credits="${ytsaurus_source_path}/yt/docker/query-tracker/credits"
 
 dockerfile="${ytsaurus_source_path}/yt/docker/query-tracker/Dockerfile"
 
+mkdir ${output_path}/yql
+
 cp ${ytserver_all} ${output_path}
 cp ${ytserver_yql_agent} ${output_path}
 cp ${mrjob} ${output_path}
+cp ${qt_build_path}/ydb/library/yql/udfs/common/datetime2/libdatetime2_udf.so ${output_path}/yql
+cp ${qt_build_path}/ydb/library/yql/udfs/common/hyperloglog/libhyperloglog_udf.so ${output_path}/yql
+
 # TODO(nadya73): cp .so
 
 cp -r ${ytsaurus_build_path}/ytsaurus_python ${output_path}

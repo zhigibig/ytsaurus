@@ -200,7 +200,7 @@ jobs:
 
           bash ./ytsaurus/yt/docker/ytsaurus/build.sh --ytsaurus-source-path $(pwd)/ytsaurus --ytsaurus-build-path ../build --ytsaurus-spyt-release-path ../build/spyt_release --output-path ../docker-ytsaurus-build --image-tag ${IMAGE_TAG_DEBUG}
 
-          bash ./yt/docker/local/build.sh --ytsaurus-source-path $(pwd) --ytsaurus-build-path ../build --output-path ../docker-local-build --image-tag ${IMAGE_TAG_DEBUG}
+          bash ./ytsaurus/yt/docker/local/build.sh --ytsaurus-source-path $(pwd)/ytsaurus --ytsaurus-build-path ../build --output-path ../docker-local-build --image-tag ${IMAGE_TAG_DEBUG}
 
           if [[ $IMAGE_TAG != "nopush" ]];
           then
