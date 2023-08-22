@@ -72,7 +72,7 @@ cp ${ytserver_all} ${output_path}
 cp ${ytserver_yql_agent} ${output_path}
 cp ${mrjob} ${output_path}
 
-find ${qt_build_path} -name 'lib*.so' -print0 | xargs -I '{}' cp '{}' ${output_path}/yql
+find ${qt_build_path} -name 'lib*.so' -print0 | xargs -0 -I '{}' cp '{}' ${output_path}/yql
 
 cp -r ${ytsaurus_build_path}/ytsaurus_python ${output_path}
 cp ${dockerfile} ${output_path}
