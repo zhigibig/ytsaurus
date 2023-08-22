@@ -71,10 +71,8 @@ mkdir ${output_path}/yql
 cp ${ytserver_all} ${output_path}
 cp ${ytserver_yql_agent} ${output_path}
 cp ${mrjob} ${output_path}
-cp ${qt_build_path}/ydb/library/yql/udfs/common/datetime2/libdatetime2_udf.so ${output_path}/yql
-cp ${qt_build_path}/ydb/library/yql/udfs/common/hyperloglog/libhyperloglog_udf.so ${output_path}/yql
 
-# TODO(nadya73): cp .so
+find ${qt_build_path} -name 'lib*.so' -print0 | xargs -I '{}' cp '{}' ${output_path}/yql
 
 cp -r ${ytsaurus_build_path}/ytsaurus_python ${output_path}
 cp ${dockerfile} ${output_path}
