@@ -32,6 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install 
   openjdk-11-jdk \
   python3.7 \
   python3-pip \
+  libidn11-dev \
   python3.7-distutils
 
 COPY ./ytsaurus_python /tmp/ytsaurus_python

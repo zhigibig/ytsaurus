@@ -99,7 +99,7 @@ jobs:
           rm -rf *
           cmake \
             -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DCMAKE_C_COMPILER_LAUNCHER=/usr/local/bin/ccache \
             -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/local/bin/ccache \
             -DCMAKE_TOOLCHAIN_FILE=../ytsaurus/ydb/clang.toolchain \
