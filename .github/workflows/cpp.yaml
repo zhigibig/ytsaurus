@@ -94,6 +94,8 @@ jobs:
 
           sudo apt-get -y install antlr3 libaio1 libaio-dev
 
+          sed -i 's/ythrow yexception() << what;/abort();/' ../ytsaurus/ydb/ydb/library/yql/minikql/codegen/codegen.cpp
+
           mkdir -p ../build_qt
           cd ../build_qt
           rm -rf *
