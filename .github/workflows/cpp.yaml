@@ -105,8 +105,6 @@ jobs:
             -DCMAKE_C_COMPILER_LAUNCHER=/usr/local/bin/ccache \
             -DCMAKE_CXX_COMPILER_LAUNCHER=/usr/local/bin/ccache \
             -DCMAKE_TOOLCHAIN_FILE=../ytsaurus/ydb/clang.toolchain \
-            -DCMAKE_C_FLAGS_RELEASE="-O2 -UNDEBUG" \
-            -DCMAKE_CXX_FLAGS_RELEASE="-O2 -UNDEBUG" \
             -DCMAKE_POSITION_INDEPENDENT_CODE=On \
             ../ytsaurus/ydb
 
