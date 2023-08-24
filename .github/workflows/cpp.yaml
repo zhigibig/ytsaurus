@@ -108,7 +108,7 @@ jobs:
             -DCMAKE_C_FLAGS_RELEASE="-O2 -UNDEBUG" \
             -DCMAKE_CXX_FLAGS_RELEASE="-O2 -UNDEBUG" \
             -DCMAKE_POSITION_INDEPENDENT_CODE=On \
-            -DMKQL_DISABLE_CODEGEN \
+            -DMKQL_DISABLE_CODEGEN=yes \
             ../ytsaurus/ydb
 
       - name: Build
